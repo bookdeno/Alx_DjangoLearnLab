@@ -1,21 +1,23 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from django.views.generic.detail import DetailView
+from django.contrib.auth.views import LoginView, LogoutView
 from .models import Book, Library
 
-# Function-based view: list all books
+# --- Function-based view for listing all books ---
 def list_books(request):
     books = Book.objects.all()
     return render(request, "relationship_app/list_books.html", {"books": books})
 
-# Class-based view: library detail
+# --- Class-based view for library details ---
+from django.views.generic.detail import DetailView
+
 class LibraryDetailView(DetailView):
     model = Library
     template_name = "relationship_app/library_detail.html"
     context_object_name = "library"
 
-# Registration view
+# --- User registration view ---
 def register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -25,7 +27,6 @@ def register(request):
             return redirect("list_books")
     else:
         form = UserCreationForm()
-
     return render(request, "relationship_app/register.html", {"form": form})
 
 
